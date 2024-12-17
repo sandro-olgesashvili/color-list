@@ -1,0 +1,21 @@
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-box label {
+  display: block;
+  padding-bottom: 5px;
+}
+
+.input-box input {
+  border-radius: 5px;
+  padding: 10px 15px;
+  border: 1px solid lightskyblue;
+}
+.input-box {
+  max-width: 153px;
+}

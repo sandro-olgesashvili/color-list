@@ -1,73 +1,59 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { TextFormatPipe } from './text-format.pipe';
-import { BackgroundColorEffectDirective } from './background-color-effect.directive';
+import { Component, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    CommonModule,
-    FormsModule,
-    TextFormatPipe,
-    BackgroundColorEffectDirective,
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-  colors: string[] = [
-    'red',
-    'green',
-    'blue',
-    'yellow',
-    'orange',
-    'purple',
-    'pink',
-    'brown',
-    'gray',
-    'black',
-    'white',
-    'violet',
-    'indigo',
-    'cyan',
-    'magenta',
-    'teal',
-    'turquoise',
-    'lime',
-    'gold',
-    'silver',
-    'beige',
-    'coral',
-    'peach',
-    'maroon',
-    'navy',
-    'olive',
-    'plum',
-    'salmon',
-    'sienna',
-    'orchid',
-    'crimson',
-    'lavender',
-    'mint',
-    'fuchsia',
-    'chartreuse',
-    'azure',
-    'emerald',
-    'ruby',
-  ];
-  colorList: string[] = [];
-  colorInput: string = '';
+export class AppComponent implements OnInit {
+  registerForm!: FormGroup;
+  constructor(private fb: FormBuilder) {}
+  ngOnInit(): void {
+    this.registerForm = this.fb.group(
+      {
+        name: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        password2: ['', [Validators.required]],
+        address: [''],
+        city: ['', [Validators.required]],
+        zipCode: ['', [Validators.required, this.exactLengthValidator()]],
+      },
+      {
+        validator: this.checkPasswords,
+      }
+    );
+  }
 
-  onAddColor() {
-    this.colorInput = this.colorInput.trim();
-    this.colorInput = this.colorInput.toLowerCase();
-    let colorExists = this.colors.find((x) => x === this.colorInput);
-    if (!colorExists) return alert('wrong color name');
-    let checkColor = this.colorList.find((x) => x === this.colorInput);
-    if (checkColor) return alert('Color already exists!');
+  exactLengthValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && control.value.length !== 5) {
+        return { exactLength: true };
+      }
+      return null;
+    };
+  }
 
-    this.colorList.push(this.colorInput);
-    this.colorInput = '';
+  checkPasswords(group: FormGroup) {
+    const pass = group.controls['password'].value;
+    const confirmPass = group.controls['password2'].value;
+
+    return pass === confirmPass ? null : { doesNotMatch: true };
+  }
+
+  onSubmit() {
+    console.log(this.registerForm.value);
+    this.registerForm.reset();
   }
 }

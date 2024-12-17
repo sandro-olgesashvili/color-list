@@ -1,29 +1,55 @@
-<input type="text" [(ngModel)]="colorInput" />
-<button (click)="onAddColor()">Add Color</button>
-
-@for (color of colorList; track $index) {
-<div
-  appBackgroundColorEffect
-  style="
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-  "
->
-  <div
-    style="
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      margin-block: 10px;
-    "
-    [ngStyle]="{ background: color }"
-  >
-    {{ color | textFormat }}
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div class="input-box">
+    <label for="name">სახელი</label>
+    <input type="text" id="name" formControlName="name" />
+    <small
+      *ngIf="registerForm.get('name')?.errors?.['minlength'] && registerForm.get('name')?.touched"
+      >მინიმუმ 3 სიმბოლო, სავალდებულო.</small
+    >
   </div>
-</div>
-}
+  <div class="input-box">
+    <label for="email">ელფოსტა</label>
+    <input type="text" id="email" formControlName="email" />
+    <small
+      *ngIf="registerForm.get('email')?.errors?.['email'] && registerForm.get('email')?.touched"
+      >სწორი ფორმატით, სავალდებულო.</small
+    >
+  </div>
+  <div class="input-box">
+    <label for="password">პაროლი</label>
+    <input type="password" id="password" formControlName="password" />
+    <small
+      *ngIf="registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.touched"
+      >მინიმუმ 6 სიმბოლო, სავალდებულო.</small
+    >
+  </div>
+  <div class="input-box">
+    <label for="password2">პაროლის დადასტურება</label>
+    <input type="password" id="password2" formControlName="password2" />
+    <small
+      *ngIf="registerForm.errors?.['doesNotMatch'] && registerForm.get('password2')?.touched"
+      >პაროლთან დამთხვევის ვალიდაცია</small
+    >
+  </div>
+  <div class="input-box">
+    <label for="address">მისამართი</label>
+    <input type="text" id="address" formControlName="address" />
+  </div>
+  <div class="input-box">
+    <label for="city">ქალაქი</label>
+    <input type="text" id="city" formControlName="city" />
+    <small
+      *ngIf="registerForm.get('city')?.errors?.['required'] && registerForm.get('city')?.touched"
+      >სავალდებულო</small
+    >
+  </div>
+  <div class="input-box">
+    <label for="zipCode">საფოსტო კოდი</label>
+    <input type="text" id="zipCode" formControlName="zipCode" />
+    <small
+      *ngIf="registerForm.get('zipCode')?.errors?.['exactLength'] && registerForm.get('zipCode')?.touched"
+      >5 ციფრი</small
+    >
+  </div>
+  <button type="submit" [disabled]="registerForm.invalid">გაგზავნა</button>
+</form>
