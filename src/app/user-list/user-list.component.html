@@ -1,0 +1,9 @@
+<ul>
+  @for (user of users; track $index) {
+  <li style="list-style: none">
+    {{ user.name }}
+    <button (click)="onUserClick(user.id)">Select</button>
+    <button (click)="onDeleteUser(user.id)">Delete</button>
+  </li>
+  }
+</ul>

@@ -1,0 +1,13 @@
+label {
+  display: block;
+  margin-block: 10px;
+}
+
+button[type="submit"] {
+  margin-top: 10px;
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 5px 10px;
+  border: 1px solid black;
+}
