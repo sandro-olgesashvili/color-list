@@ -1,0 +1,33 @@
+@if (user()) {
+<form class="user-form" [formGroup]="userForm" (ngSubmit)="onUpdate()">
+  <h2>User Information</h2>
+
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" name="name" formControlName="name" />
+  </div>
+
+  <div class="form-group">
+    <label>Username</label>
+    <input type="text" name="username" formControlName="username" />
+  </div>
+
+  <div class="form-group">
+    <label>Website</label>
+    <input type="url" name="website" formControlName="website" />
+  </div>
+
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" name="email" formControlName="email" />
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="submit-btn" [disabled]="userForm.invalid">
+      Save
+    </button>
+  </div>
+</form>
+} @else {
+<h2>Select User</h2>
+}
