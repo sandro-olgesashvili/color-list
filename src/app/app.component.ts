@@ -1,73 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { TextFormatPipe } from './text-format.pipe';
-import { BackgroundColorEffectDirective } from './background-color-effect.directive';
+import { AfterViewChecked, Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './components/header/header.component';
+import { ShareService } from './service/share.service';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    CommonModule,
-    FormsModule,
-    TextFormatPipe,
-    BackgroundColorEffectDirective,
-  ],
+  imports: [CommonModule, RouterOutlet, HeaderComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-  colors: string[] = [
-    'red',
-    'green',
-    'blue',
-    'yellow',
-    'orange',
-    'purple',
-    'pink',
-    'brown',
-    'gray',
-    'black',
-    'white',
-    'violet',
-    'indigo',
-    'cyan',
-    'magenta',
-    'teal',
-    'turquoise',
-    'lime',
-    'gold',
-    'silver',
-    'beige',
-    'coral',
-    'peach',
-    'maroon',
-    'navy',
-    'olive',
-    'plum',
-    'salmon',
-    'sienna',
-    'orchid',
-    'crimson',
-    'lavender',
-    'mint',
-    'fuchsia',
-    'chartreuse',
-    'azure',
-    'emerald',
-    'ruby',
-  ];
-  colorList: string[] = [];
-  colorInput: string = '';
+export class AppComponent implements OnInit {
+  loading!: Boolean;
+  constructor(private loadingService: ShareService) {}
 
-  onAddColor() {
-    this.colorInput = this.colorInput.trim();
-    this.colorInput = this.colorInput.toLowerCase();
-    let colorExists = this.colors.find((x) => x === this.colorInput);
-    if (!colorExists) return alert('wrong color name');
-    let checkColor = this.colorList.find((x) => x === this.colorInput);
-    if (checkColor) return alert('Color already exists!');
-
-    this.colorList.push(this.colorInput);
-    this.colorInput = '';
+  ngOnInit(): void {
+    this.loadingService.getLoading().subscribe((load) => {
+      this.loading = load;
+    });
   }
 }

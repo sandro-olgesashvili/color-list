@@ -1,29 +1,7 @@
-<input type="text" [(ngModel)]="colorInput" />
-<button (click)="onAddColor()">Add Color</button>
-
-@for (color of colorList; track $index) {
-<div
-  appBackgroundColorEffect
-  style="
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-  "
->
-  <div
-    style="
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      margin-block: 10px;
-    "
-    [ngStyle]="{ background: color }"
-  >
-    {{ color | textFormat }}
-  </div>
+<app-header></app-header>
+<router-outlet></router-outlet>
+@if (loading) {
+<div class="loader-box">
+  <span class="loader"></span>
 </div>
 }

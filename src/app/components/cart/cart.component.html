@@ -1,0 +1,41 @@
+<div class="search-container">
+  <input
+    type="text"
+    id="search-input"
+    placeholder="Search for products..."
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="filteredProducts()"
+  />
+</div>
+<div class="product-container">
+  @for (item of productList; track $index) {
+  <div class="product-card">
+    <img class="product-image" [src]="item.image" alt="Product Image" />
+    <div class="product-info">
+      <h2 class="product-title">{{ item.title }}</h2>
+      <p class="product-category">
+        Category: <span>{{ item.category }}</span>
+      </p>
+      <p class="product-description">
+        {{ item.description }}
+      </p>
+      <p class="product-price">{{ item.price | currency : "USD" }}</p>
+      <div class="product-rating">
+        <span class="rating-rate">Rating:{{ item.rating.rate }}</span>
+        <span class="rating-count">({{ item.rating.count }})</span>
+      </div>
+      <button
+        class="product-details-button"
+        (click)="removeProductFromCart(item)"
+      >
+        Delete
+      </button>
+    </div>
+    <div class="button-container" style="margin-top: auto">
+      <button class="action-btn">-</button>
+      <span class="counter">{{ item.quantity }}</span>
+      <button class="action-btn">+</button>
+    </div>
+  </div>
+  }
+</div>
