@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ShareService {
   loadingBool = new BehaviorSubject<boolean>(false);
+  logingBool = new BehaviorSubject<boolean>(false);
 
   constructor() {}
 
@@ -15,5 +16,13 @@ export class ShareService {
 
   getLoading(): Observable<boolean> {
     return this.loadingBool.asObservable();
+  }
+
+  getLogin() {
+    return this.logingBool.asObservable();
+  }
+
+  setLogin(value: boolean) {
+    this.logingBool.next(value);
   }
 }

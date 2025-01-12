@@ -4,6 +4,8 @@ import { Product } from '../../models/products.model';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { CartService } from '../../service/cart.service';
+import { map, mergeMap, Observable, retry, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -16,13 +18,26 @@ export class ProductsComponent implements OnInit {
   productListCopy: Product[] = [];
   searchTerm: string = '';
 
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private cartService: CartService
+  ) {}
   ngOnInit(): void {
     Promise.resolve().then(() => {
-      this.productsService.getProducts().subscribe((items) => {
-        this.productList = items;
-        this.productListCopy = items;
-      });
+      this.productsService
+        .getProducts()
+        .pipe(
+          mergeMap((allProducts) => {
+            return this.productsService
+              .newProductsList()
+              .pipe(map((newProducts) => [...allProducts, ...newProducts]));
+          }),
+          retry(2)
+        )
+        .subscribe((items) => {
+          this.productList = items;
+          this.productListCopy = items;
+        });
     });
   }
 
@@ -36,17 +51,33 @@ export class ProductsComponent implements OnInit {
   }
 
   addProductToCart(e: Product) {
-    let storageItem = JSON.parse(localStorage.getItem('products')!);
-    if (storageItem) {
-      let exists = storageItem.some((x: Product) => x.id === e.id);
-      if (exists) {
-        alert('Item is already added!');
-        return;
-      }
-      let arr = [{ ...e, quantity: 1 }, ...storageItem];
-      localStorage.setItem('products', JSON.stringify(arr));
+    let user = localStorage.getItem('user')!;
+    const { id, ...newObj } = e;
+
+    if (user) {
+      this.cartService
+        .getCartProduct()
+        .pipe(
+          switchMap((prod) => {
+            let itemExists = prod.filter((x) => x.product_id === e.id);
+            if (itemExists.length) {
+              alert('Item is already added!');
+              return new Observable<Product[]>();
+            } else {
+              return this.productsService.addProduct({
+                ...newObj,
+                product_id: id,
+                user: user,
+                quantity: 1,
+              });
+            }
+          })
+        )
+        .subscribe(() => {
+          alert('Product added');
+        });
     } else {
-      localStorage.setItem('products', JSON.stringify([{ ...e, quantity: 1 }]));
+      alert('Login');
     }
   }
 }

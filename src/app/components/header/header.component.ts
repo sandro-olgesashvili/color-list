@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ShareService } from '../../service/share.service';
 
 @Component({
   selector: 'app-header',
@@ -8,4 +9,26 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderComponent {}
+export class HeaderComponent implements OnInit {
+  isLogin: boolean = false;
+  isAdmin: boolean = false;
+  constructor(private share: ShareService, private router: Router) {}
+  ngOnInit(): void {
+    this.share.getLogin().subscribe((value) => {
+      this.isLogin = value;
+      localStorage.getItem('user') === 'admin'
+        ? (this.isAdmin = true)
+        : (this.isAdmin = false);
+    });
+    if (localStorage.getItem('user')) {
+      this.isLogin = true;
+    }
+  }
+
+  logOut() {
+    localStorage.removeItem('user');
+    this.router.navigate(['login']);
+    this.isLogin = false;
+    this.isAdmin = false;
+  }
+}

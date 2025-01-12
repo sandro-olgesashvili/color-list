@@ -52,3 +52,12 @@ button:hover {
 button:disabled {
   background-color: #ccc;
 }
+
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 5px;
+  display: block;
+  padding: 0 10px;
+}

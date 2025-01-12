@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from '../../models/products.model';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
+import { CartService } from '../../service/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -14,9 +15,15 @@ export class CartComponent implements OnInit {
   productListCopy: Product[] = [];
   searchTerm: string = '';
 
+  constructor(private cartService: CartService) {}
+
   ngOnInit(): void {
-    this.productList = JSON.parse(localStorage.getItem('products')!);
-    this.productListCopy = JSON.parse(localStorage.getItem('products')!);
+    if (localStorage.getItem('user')) {
+      this.cartService.getCartProduct().subscribe((cart) => {
+        this.productList = cart;
+        this.productListCopy = cart;
+      });
+    }
   }
   filteredProducts(): void {
     this.productList = [...this.productListCopy];
@@ -28,12 +35,25 @@ export class CartComponent implements OnInit {
   }
 
   removeProductFromCart(e: Product) {
-    let storageItem = JSON.parse(localStorage.getItem('products')!);
-    if (storageItem) {
-      let arr = storageItem.filter((item: Product) => item.id !== e.id);
-      this.productList = arr;
-      this.productListCopy = arr;
-      localStorage.setItem('products', JSON.stringify(arr));
+    this.cartService.deleteFromCart(e.id).subscribe((x) => {
+      this.productList = this.productList.filter(
+        (product) => product.id !== e.id
+      );
+      this.productListCopy = this.productListCopy.filter(
+        (product) => product.id !== e.id
+      );
+    });
+  }
+
+  increase(e: Product) {
+    e.quantity! += 1;
+    this.cartService.updateProduct(e).subscribe((x) => {});
+  }
+
+  decrease(e: Product) {
+    if (e.quantity! > 1) {
+      e.quantity! -= 1;
+      this.cartService.updateProduct(e).subscribe((x) => {});
     }
   }
 }

@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { ProductComponent } from './components/product/product.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -13,7 +15,10 @@ export const routes: Routes = [
   },
   {
     path: 'product/:id',
-    component: ProductComponent,
+    loadComponent: () =>
+      import('./components/product/product.component').then(
+        (c) => c.ProductComponent
+      ),
   },
   {
     path: 'login',
@@ -21,6 +26,7 @@ export const routes: Routes = [
       import('./components/login/login.component').then(
         (c) => c.LoginComponent
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'register',
@@ -28,15 +34,24 @@ export const routes: Routes = [
       import('./components/register/register.component').then(
         (c) => c.RegisterComponent
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'cart',
     loadComponent: () =>
       import('./components/cart/cart.component').then((c) => c.CartComponent),
   },
-
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./components/admin/admin.routes').then((c) => c.admin),
+    canActivate: [adminGuard],
+  },
   {
     path: '**',
-    component: PageNotFoundComponent,
+    loadComponent: () =>
+      import('./components/page-not-found/page-not-found.component').then(
+        (c) => c.PageNotFoundComponent
+      ),
   },
 ];

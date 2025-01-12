@@ -1,0 +1,129 @@
+<div class="container">
+  <h2>Product Form</h2>
+  <form [formGroup]="productForm" (ngSubmit)="addProd()">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" formControlName="title" class="form-control" />
+      <div
+        *ngIf="
+          productForm.get('title')?.invalid && productForm.get('title')?.touched
+        "
+        class="text-danger"
+      >
+        Title is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input
+        id="price"
+        type="number"
+        formControlName="price"
+        class="form-control"
+      />
+      <div
+        *ngIf="
+          productForm.get('price')?.invalid && productForm.get('price')?.touched
+        "
+        class="text-danger"
+      >
+        Price must be a positive number.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+      ></textarea>
+      <div
+        *ngIf="
+          productForm.get('description')?.invalid &&
+          productForm.get('description')?.touched
+        "
+        class="text-danger"
+      >
+        Description is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <input id="category" formControlName="category" class="form-control" />
+      <div
+        *ngIf="
+          productForm.get('category')?.invalid &&
+          productForm.get('category')?.touched
+        "
+        class="text-danger"
+      >
+        Category is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <span
+        >https://qph.cf2.quoracdn.net/main-qimg-4df0d39b6548c0186c57b53589dd1dfa-lq</span
+      >
+      <label for="image">Image URL</label>
+      <input id="image" formControlName="image" class="form-control" />
+      <div
+        *ngIf="
+          productForm.get('image')?.invalid && productForm.get('image')?.touched
+        "
+        class="text-danger"
+      >
+        Image URL is required.
+      </div>
+    </div>
+
+    <div class="form-group" formGroupName="rating">
+      <label for="rate">Rating</label>
+      <input
+        id="rate"
+        type="number"
+        formControlName="rate"
+        class="form-control"
+      />
+      <div
+        *ngIf="
+          productForm.get('rating.rate')?.errors &&
+          productForm.get('rating.rate')?.touched
+        "
+        class="text-danger"
+      >
+        Rating is required
+      </div>
+    </div>
+
+    <div class="form-group" formGroupName="rating">
+      <label for="count">Count</label>
+      <input
+        id="count"
+        type="number"
+        formControlName="count"
+        class="form-control"
+      />
+      <div
+        *ngIf="
+          productForm.get('rating.count')?.errors &&
+          productForm.get('rating.count')?.touched
+        "
+        class="text-danger"
+      >
+        Count must be a positive number.
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="productForm.invalid"
+    >
+      Submit
+    </button>
+  </form>
+</div>

@@ -24,17 +24,9 @@
         <span class="rating-rate">Rating:{{ item.rating.rate }}</span>
         <span class="rating-count">({{ item.rating.count }})</span>
       </div>
-      <button
-        class="product-details-button"
-        (click)="removeProductFromCart(item)"
-      >
+      <button class="product-details-button" (click)="removeProduct(item)">
         Delete
       </button>
-    </div>
-    <div class="button-container" style="margin-top: auto">
-      <button class="action-btn" (click)="decrease(item)">-</button>
-      <span class="counter">{{ item.quantity }}</span>
-      <button class="action-btn" (click)="increase(item)">+</button>
     </div>
   </div>
   }
